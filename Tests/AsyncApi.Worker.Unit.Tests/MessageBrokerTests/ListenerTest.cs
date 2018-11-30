@@ -68,7 +68,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
             MessageProcessor1.Setup(x => x.Type).Returns(MessageType.CreateClient);
             MessageProcessor1.Setup(x => x.Process(It.IsAny<string>())).Callback<string>((messageParam) => processedMessage = messageParam);
 
-            var listener = new Listener(ConnectionFactory.Object, ConsumerFactory.Object, type, queueName, exchangeName, new List<IMessageProcessor> { MessageProcessor1.Object });
+            var listener = new Listener(ConnectionFactory.Object, ConsumerFactory.Object, type, queueName, exchangeName, new List<IMessageProcessor> { MessageProcessor1.Object }, Logger.Object);
 
             listener.Run();
 
@@ -136,7 +136,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
             MessageProcessor1.Setup(x => x.Type).Returns(MessageType.CreateClient);
             MessageProcessor1.Setup(x => x.Process(It.IsAny<string>())).Callback<string>((messageParam) => processedMessage = messageParam);
 
-            var listener = new Listener(ConnectionFactory.Object, ConsumerFactory.Object, type, queueName, exchangeName, new List<IMessageProcessor> { MessageProcessor1.Object });
+            var listener = new Listener(ConnectionFactory.Object, ConsumerFactory.Object, type, queueName, exchangeName, new List<IMessageProcessor> { MessageProcessor1.Object }, Logger.Object);
 
             ConnectionFactory.Verify(x => x.CreateConnection(), Times.Never);
             Connection.Verify(x => x.CreateModel(), Times.Never);

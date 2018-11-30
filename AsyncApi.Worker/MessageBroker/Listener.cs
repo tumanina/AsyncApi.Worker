@@ -21,13 +21,14 @@ namespace AsyncApi.Worker.MessageBroker
         public MessageType Type => _type;
 
         public Listener(IConnectionFactory connectionFactory, IConsumerFactory consumerFactory, MessageType type, string queueName, 
-            string exchangeName, IEnumerable<IMessageProcessor> messageProcessors)
+            string exchangeName, IEnumerable<IMessageProcessor> messageProcessors, ILogger<Listener> logger)
         {
             _consumerFactory = consumerFactory;
             _type = type;
             _queueName = queueName;
             _exchangeName = exchangeName;
             _connectionFactory = connectionFactory;
+            _logger = logger;
 
             _messageProcessor = messageProcessors.FirstOrDefault(t => t.Type == type);
         }
