@@ -6,7 +6,6 @@ namespace AsyncApi.Worker.MessageBroker
 {
     public class CreateClientMessageProcessor : MessageProcessor<CreateClientMessage>
     {
-
         public CreateClientMessageProcessor(ITaskService taskService, ISender sender) : base(taskService, sender)
         {
         }

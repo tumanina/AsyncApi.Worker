@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Text;
+﻿using System.Text;
 using RabbitMQ.Client;
 
 namespace AsyncApi.Worker.MessageBroker
@@ -21,12 +20,17 @@ namespace AsyncApi.Worker.MessageBroker
             {
                 using (var model = connection.CreateModel())
                 {
-                    model.ExchangeDeclare(_exchangeName, ExchangeType.Direct, true);
-                    model.QueueDeclare(queueName, false, false, true, new ConcurrentDictionary<string, object>());
-                    model.QueueBind(queueName, _exchangeName, queueName, null);
+                    try
+                    {
+                        model.QueueBind(queueName, _exchangeName, queueName, null);
 
-                    byte[] messageBodyBytes = Encoding.UTF8.GetBytes(message);
-                    model.BasicPublish(_exchangeName, queueName, null, messageBodyBytes);
+                        byte[] messageBodyBytes = Encoding.UTF8.GetBytes(message);
+                        model.BasicPublish(_exchangeName, queueName, null, messageBodyBytes);
+                    }
+                    catch
+                    {
+                        //queue already delete (by timeout consumers switched off); shouldn't do anything
+                    }
                 }
             }
         }

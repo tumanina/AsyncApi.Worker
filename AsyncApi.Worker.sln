@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncApi.Worker", "AsyncApi.Worker\AsyncApi.Worker.csproj", "{0538947B-07B3-4CA5-861D-1A95A1DE28A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncApi.Worker", "AsyncApi.Worker\AsyncApi.Worker.csproj", "{0538947B-07B3-4CA5-861D-1A95A1DE28A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F9396976-6E60-492F-89EC-45DDD67D83C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncApi.Worker.Unit.Tests", "Tests\AsyncApi.Worker.Unit.Tests\AsyncApi.Worker.Unit.Tests.csproj", "{D63BFEAF-2366-4B27-8E9B-5CC0C8C6F08D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{0538947B-07B3-4CA5-861D-1A95A1DE28A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0538947B-07B3-4CA5-861D-1A95A1DE28A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0538947B-07B3-4CA5-861D-1A95A1DE28A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D63BFEAF-2366-4B27-8E9B-5CC0C8C6F08D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63BFEAF-2366-4B27-8E9B-5CC0C8C6F08D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63BFEAF-2366-4B27-8E9B-5CC0C8C6F08D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63BFEAF-2366-4B27-8E9B-5CC0C8C6F08D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D63BFEAF-2366-4B27-8E9B-5CC0C8C6F08D} = {F9396976-6E60-492F-89EC-45DDD67D83C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31420BDE-8B9F-4CCA-A92B-D762CCFF53E3}

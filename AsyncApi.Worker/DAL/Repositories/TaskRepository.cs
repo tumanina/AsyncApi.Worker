@@ -10,47 +10,53 @@ namespace AsyncApi.Worker.Repositories
 {
     public class TaskRepository: ITaskRepository
     {
-        private readonly ITaskDBContext _context;
+        private readonly ITaskDBContextFactory _factory;
 
-        public TaskRepository(ITaskDBContext context)
+        public TaskRepository(ITaskDBContextFactory factory)
         {
-            _context = context;
+            _factory = factory;
         }
 
         public Task UpdateStatus(Guid id, int status, string result)
         {
-            var task = _context.Task.SingleOrDefault(b => b.Id == id);
-            if (task != null)
+            using (var context = _factory.CreateDBContext())
             {
-                task.Status = status;
-                task.UpdatedDate = DateTime.UtcNow;
-                task.Result = result;
-                _context.SaveChanges();
-            }
-            else
-            {
-                return null;
-            }
+                var task = context.Task.SingleOrDefault(b => b.Id == id);
+                if (task != null)
+                {
+                    task.Status = status;
+                    task.UpdatedDate = DateTime.UtcNow;
+                    task.Result = result;
+                    context.SaveChanges();
+                }
+                else
+                {
+                    return null;
+                }
 
-            return _context.Task.AsNoTracking().FirstOrDefault(t => t.Id == id);
+                return context.Task.AsNoTracking().FirstOrDefault(t => t.Id == id);
+            }
         }
 
         public Task SetError(Guid id, string error)
         {
-            var task = _context.Task.SingleOrDefault(b => b.Id == id);
-            if (task != null)
+            using (var context = _factory.CreateDBContext())
             {
-                task.Status = (int)TaskStatus.Failed;
-                task.UpdatedDate = DateTime.UtcNow;
-                task.Error = error;
-                _context.SaveChanges();
-            }
-            else
-            {
-                return null;
-            }
+                var task = context.Task.SingleOrDefault(b => b.Id == id);
+                if (task != null)
+                {
+                    task.Status = (int)TaskStatus.Failed;
+                    task.UpdatedDate = DateTime.UtcNow;
+                    task.Error = error;
+                    context.SaveChanges();
+                }
+                else
+                {
+                    return null;
+                }
 
-            return _context.Task.AsNoTracking().FirstOrDefault(t => t.Id == id);
+                return context.Task.AsNoTracking().FirstOrDefault(t => t.Id == id);
+            }
         }
     }
 }

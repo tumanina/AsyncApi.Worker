@@ -1,6 +1,7 @@
 ﻿using MultiWallet.Business.MessageBroker.Messages;
 using AsyncApi.Worker.Services;
 using Newtonsoft.Json;
+using System;
 
 namespace AsyncApi.Worker.MessageBroker
 {
@@ -20,15 +21,33 @@ namespace AsyncApi.Worker.MessageBroker
 
         public void Process(string message)
         {
-            var model = JsonConvert.DeserializeObject<T>(message);
+            var taskId = (Guid?)null;
+            var callbackQueueName = string.Empty;
+            try
+            {
+                var model = JsonConvert.DeserializeObject<T>(message);
 
-            var taskId = model.TaskId;
+                taskId = model.TaskId;
+                callbackQueueName = model.CallbackQueueName;
+                var result = GetResult(model);
 
-            var result = GetResult(model);
+                _sender.SendMessage(callbackQueueName, result);
+                _taskService.UpdateStatus(model.TaskId, 5, result);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ex.InnerMessage();
 
-            _sender.SendMessage(model.CallbackQueueName, result);
+                if (!string.IsNullOrEmpty(callbackQueueName))
+                {
+                    _sender.SendMessage(callbackQueueName, JsonConvert.SerializeObject(new ErrorResponse { ErrorCode = 500, Error = errorMessage }));
+                }
 
-            _taskService.UpdateStatus(model.TaskId, 5, result);
+                if (taskId != null)
+                {
+                    _taskService.SetError(taskId.Value, errorMessage);
+                }
+            }
         }
 
         protected virtual string GetResult(T request)

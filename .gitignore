@@ -1,3 +1,5 @@
 AsyncApi.Worker/bin/
 AsyncApi.Worker/obj/
 .vs/AsyncApi.Worker/v15/Server/sqlite3/db.lock
+Tests/AsyncApi.Worker.Unit.Tests/bin/
+Tests/AsyncApi.Worker.Unit.Tests/obj/

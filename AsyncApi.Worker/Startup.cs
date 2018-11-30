@@ -61,6 +61,7 @@ namespace AsyncApi.Worker
                         UserName = listener.Server.UserName,
                         Password = listener.Server.Password
                     },
+                    serviceProvider.GetService<IConsumerFactory>(),
                     listener.Type,
                     listener.QueueName,
                     listener.ExchangeName,
