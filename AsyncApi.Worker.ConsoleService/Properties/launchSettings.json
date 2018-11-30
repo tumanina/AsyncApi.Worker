@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "MultiWalletWorker.Console": {
+      "commandName": "Project"
+    }
+  }
+}

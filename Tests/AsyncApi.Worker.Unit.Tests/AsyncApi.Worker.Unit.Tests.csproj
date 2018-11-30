@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AsyncApi.Worker.Api\AsyncApi.Worker.Api.csproj" />
     <ProjectReference Include="..\..\AsyncApi.Worker\AsyncApi.Worker.csproj" />
   </ItemGroup>
 
