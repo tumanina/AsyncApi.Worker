@@ -24,20 +24,18 @@ namespace AsyncApi.Worker.ConsoleService
         {
             serviceCollection.AddCoreServices(Configuration);
 
-            serviceCollection.AddLogging((builder) => builder.SetMinimumLevel(LogLevel.Trace));
-
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-
-            loggerFactory.AddNLog(new NLogProviderOptions
+            serviceCollection.AddLogging(builder =>
             {
-                CaptureMessageTemplates = true,
-                CaptureMessageProperties = true
+                builder.SetMinimumLevel(LogLevel.Information);
+                builder.AddNLog(new NLogProviderOptions
+                {
+                    CaptureMessageTemplates = true,
+                    CaptureMessageProperties = true
+                });
             });
-
             NLog.LogManager.LoadConfiguration("nlog.config");
 
+            var serviceProvider = serviceCollection.BuildServiceProvider();
             serviceCollection.AddTransient<ConsoleApp>(t => new ConsoleApp(serviceProvider.GetService<ILogger<ConsoleApp>>(), 
                 serviceCollection.BuildServiceProvider().GetServices<IListener>()));
 
