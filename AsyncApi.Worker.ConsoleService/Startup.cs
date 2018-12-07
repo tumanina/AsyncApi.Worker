@@ -22,7 +22,7 @@ namespace AsyncApi.Worker.ConsoleService
         
         public void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddCoreServices(Configuration);
+            serviceCollection.AddServices(Configuration);
 
             serviceCollection.AddLogging(builder =>
             {

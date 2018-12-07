@@ -3,3 +3,7 @@ AsyncApi.Worker/obj/
 .vs/AsyncApi.Worker/v15/Server/sqlite3/db.lock
 Tests/AsyncApi.Worker.Unit.Tests/bin/
 Tests/AsyncApi.Worker.Unit.Tests/obj/
+AsyncApi.Worker.Api/bin/
+AsyncApi.Worker.Api/obj/
+AsyncApi.Worker.ConsoleService/obj/
+AsyncApi.Worker.ConsoleService/bin/

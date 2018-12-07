@@ -1,20 +1,22 @@
 ﻿using MultiWallet.Business.MessageBroker.Messages;
 using AsyncApi.Worker.Services;
-using Newtonsoft.Json;
 
 namespace AsyncApi.Worker.MessageBroker
 {
     public class CreateClientMessageProcessor : MessageProcessor<CreateClientMessage>
     {
-        public CreateClientMessageProcessor(ITaskService taskService, ISender sender) : base(taskService, sender)
+        private readonly ICustomerService _customerService;
+
+        public CreateClientMessageProcessor(ITaskService taskService, ICustomerService customerService, ISender sender) : base(taskService, sender)
         {
+            _customerService = customerService;
         }
 
         public override MessageType Type { get { return MessageType.CreateClient; } }
 
         protected override string GetResult(CreateClientMessage request)
         {
-            return JsonConvert.SerializeObject(new { Family = "test" });
+            return _customerService.CreateCustomer(request.Name, request.Email, request.Password).Result;
         }
     }
 }

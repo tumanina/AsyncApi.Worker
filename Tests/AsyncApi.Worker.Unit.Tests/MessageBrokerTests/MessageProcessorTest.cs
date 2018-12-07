@@ -1,4 +1,5 @@
 using System;
+using AsyncApi.Worker.Enums;
 using AsyncApi.Worker.MessageBroker;
 using AsyncApi.Worker.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,8 +29,8 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
             var result = string.Empty;
             var sendingMessage = "";
 
-            TaskService.Setup(x => x.UpdateStatus(taskId, 5, Result))
-                .Callback<Guid, int, string>((idParam, statusParam, messageParam) =>
+            TaskService.Setup(x => x.UpdateStatus(taskId, TaskStatus.Completed, Result))
+                .Callback<Guid, TaskStatus, string>((idParam, statusParam, messageParam) =>
                 {
                     result = messageParam;
                 });
@@ -46,7 +47,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
 
             service.Process(message);
 
-            TaskService.Verify(x => x.UpdateStatus(taskId, 5, Result), Times.Once);
+            TaskService.Verify(x => x.UpdateStatus(taskId, TaskStatus.Completed, Result), Times.Once);
             TaskService.Verify(x => x.SetError(taskId, ErrorMessage), Times.Never);
             Sender.Verify(x => x.SendMessage(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(callbackQueueName, queueName);
@@ -63,7 +64,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
             var queueName = $"{taskId}_queue";
             var message = "queueName";
 
-            TaskService.Setup(x => x.UpdateStatus(taskId, 5, Result));
+            TaskService.Setup(x => x.UpdateStatus(taskId, TaskStatus.Completed, Result));
 
             TaskService.Setup(x => x.SetError(taskId, ErrorMessage));
             Sender.Setup(x => x.SendMessage(It.IsAny<string>(), It.IsAny<string>()));
@@ -72,7 +73,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
 
             service.Process(message);
 
-            TaskService.Verify(x => x.UpdateStatus(taskId, 5, Result), Times.Never);
+            TaskService.Verify(x => x.UpdateStatus(taskId, TaskStatus.Completed, Result), Times.Never);
             TaskService.Verify(x => x.SetError(taskId, ErrorMessage), Times.Never);
             Sender.Verify(x => x.SendMessage(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -90,7 +91,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
 
             var error = "";
 
-            TaskService.Setup(x => x.UpdateStatus(taskId, 5, Result));
+            TaskService.Setup(x => x.UpdateStatus(taskId, TaskStatus.Completed, Result));
             TaskService.Setup(x => x.SetError(taskId, ErrorMessage));
             Sender.Setup(x => x.SendMessage(It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string>((queueParam, messageParam) =>
@@ -103,7 +104,7 @@ namespace AsyncApi.Worker.Unit.Tests.MessageBrokerTests
 
             service.Process(message);
 
-            TaskService.Verify(x => x.UpdateStatus(taskId, 5, Result), Times.Never);
+            TaskService.Verify(x => x.UpdateStatus(taskId, TaskStatus.Completed, Result), Times.Never);
             TaskService.Verify(x => x.SetError(taskId, ErrorMessage), Times.Once);
             Sender.Verify(x => x.SendMessage(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(callbackQueueName, queueName);

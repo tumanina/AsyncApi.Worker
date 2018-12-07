@@ -26,12 +26,8 @@ namespace AsyncApi.Worker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
-            services.AddCoreServices(Configuration);
-
-            var serviceProvider = services.BuildServiceProvider();
-
-            services.AddListeners(serviceProvider, Configuration);
+            services.AddServices(Configuration);
+            services.AddListeners(services.BuildServiceProvider(), Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)

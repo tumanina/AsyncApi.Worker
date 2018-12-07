@@ -1,4 +1,5 @@
-﻿using AsyncApi.Worker.Repositories.Interfaces;
+﻿using AsyncApi.Worker.Enums;
+using AsyncApi.Worker.Repositories.Interfaces;
 using AsyncApi.Worker.Services.Models;
 using System;
 
@@ -13,9 +14,9 @@ namespace AsyncApi.Worker.Services
             _taskRepository = taskRepository;
         }
 
-        public Task UpdateStatus(Guid id, int status, string result)
+        public Task UpdateStatus(Guid id, TaskStatus status, string result)
         {
-            var task = _taskRepository.UpdateStatus(id, status, result);
+            var task = _taskRepository.UpdateStatus(id, (int)status, result);
 
             return task == null ? null : new Task(task);
         }

@@ -2,6 +2,7 @@
 using AsyncApi.Worker.Services;
 using Newtonsoft.Json;
 using System;
+using AsyncApi.Worker.Enums;
 
 namespace AsyncApi.Worker.MessageBroker
 {
@@ -32,7 +33,7 @@ namespace AsyncApi.Worker.MessageBroker
                 var result = GetResult(model);
 
                 _sender.SendMessage(callbackQueueName, result);
-                _taskService.UpdateStatus(model.TaskId, 5, result);
+                _taskService.UpdateStatus(model.TaskId, TaskStatus.Completed, result);
             }
             catch (Exception ex)
             {

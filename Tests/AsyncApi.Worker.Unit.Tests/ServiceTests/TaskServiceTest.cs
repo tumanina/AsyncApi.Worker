@@ -37,7 +37,7 @@ namespace AsyncApi.Worker.Unit.Tests.ServiceTests
 
             var service = new TaskService(TaskRepository.Object);
 
-            var result = service.UpdateStatus(id, (int)status, taskResult);
+            var result = service.UpdateStatus(id, status, taskResult);
 
             TaskRepository.Verify(x => x.UpdateStatus(id, (int)status, taskResult), Times.Once);
             Assert.AreEqual(result.Type, type);
@@ -59,7 +59,7 @@ namespace AsyncApi.Worker.Unit.Tests.ServiceTests
 
             var service = new TaskService(TaskRepository.Object);
 
-            var result = service.UpdateStatus(id, (int)status, taskResult);
+            var result = service.UpdateStatus(id, status, taskResult);
 
             TaskRepository.Verify(x => x.UpdateStatus(id, (int)status, taskResult), Times.Once);
             Assert.AreEqual(result, null);

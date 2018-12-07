@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AsyncApi.Worker.Configuration;
 using AsyncApi.Worker.MessageBroker;
 using AsyncApi.Worker.Repositories;
@@ -15,7 +16,7 @@ namespace AsyncApi.Worker
 {
     public static class ServiceCollectionExtension
     {       
-        public static void AddCoreServices(this IServiceCollection services, IConfigurationRoot configuration)
+        public static void AddServices(this IServiceCollection services, IConfigurationRoot configuration)
         {
             var connectionString = configuration.GetConnectionString("TaskDBConnectionString");
 
@@ -25,17 +26,27 @@ namespace AsyncApi.Worker
             services.AddSingleton<ITaskDBContext, TaskDBContext>();
             services.AddSingleton<ITaskRepository, TaskRepository>();
             services.AddSingleton<ITaskService, TaskService>();
+            services.AddSingleton<IClient, Client>();
+            services.AddSingleton<IClientFactory, ClientFactory>();
             services.AddSingleton<IMessageProcessor, CreateClientMessageProcessor>();
             services.AddSingleton<IConsumerFactory, ConsumerFactory>();
 
-            var CallBackServerConfiguration = configuration.GetSection("CallBackServer").Get<SenderConfiguration>();
+            var callBackServerConfiguration = configuration.GetSection("CallBackServer").Get<SenderConfiguration>();
             services.AddSingleton<ISender>(t => new Sender(new ConnectionFactory
             {
-                HostName = CallBackServerConfiguration.Server.Host,
-                UserName = CallBackServerConfiguration.Server.UserName,
-                Password = CallBackServerConfiguration.Server.Password
+                HostName = callBackServerConfiguration.Server.Host,
+                UserName = callBackServerConfiguration.Server.UserName,
+                Password = callBackServerConfiguration.Server.Password
             },
-            CallBackServerConfiguration.ExchangeName));
+            callBackServerConfiguration.ExchangeName));
+
+            var serviceProvider = services.BuildServiceProvider();
+            var apiConfigurations = configuration.GetSection("APIConfigurations").Get<IEnumerable<ClientConfiguration>>();
+            services.AddSingleton<ICustomerService>(t => new CustomerService(
+                serviceProvider.GetService<IClientFactory>(), 
+                apiConfigurations.FirstOrDefault(c => c.Client == Clients.Customers), 
+                serviceProvider.GetService<ILogger<ICustomerService>>())
+            );
         }
 
         public static void AddListeners(this IServiceCollection services, ServiceProvider serviceProvider, IConfigurationRoot configuration)
